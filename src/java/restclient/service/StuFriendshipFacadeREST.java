@@ -5,6 +5,8 @@
  */
 package restclient.service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -92,17 +94,20 @@ public class StuFriendshipFacadeREST extends AbstractFacade<StuFriendship> {
     @Produces({"application/json"})
     public List<StuProfile> findByFrId(@PathParam("frId") String frId){
         Query query = em.createNamedQuery("StuFriendship.findByFrId");
-        query.setParameter("frId", frId);
+        query.setParameter("frId", Integer.parseInt(frId));
         return query.getResultList();
     }
+   
 
     //Get friend profile by friendship start date
     @GET
     @Path("findByFrStartDate/{frStartDate}")
     @Produces({"application/json"})
-    public List<StuProfile> findByFrStartDate(@PathParam("frStartDate") Date frStartDate){
+    public List<StuFriendship> findByFrStartDate(@PathParam("frStartDate") String frStartDate) throws ParseException{
         Query query = em.createNamedQuery("StuFriendship.findByFrStartDate");
-        query.setParameter("frStartDate", frStartDate);
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Date sDate = df.parse(frStartDate);
+        query.setParameter("frStartDate", sDate);
         return query.getResultList();
     }    
     
@@ -110,9 +115,11 @@ public class StuFriendshipFacadeREST extends AbstractFacade<StuFriendship> {
     @GET
     @Path("findByFrEndDate/{frEndDate}")
     @Produces({"application/json"})
-    public List<StuProfile> findByFrEndDate(@PathParam("frEndDate") Date frEndDate){
+    public List<StuFriendship> findByFrEndDate(@PathParam("frEndDate") String frEndDate) throws ParseException{
         Query query = em.createNamedQuery("StuFriendship.findByFrEndDate");
-        query.setParameter("frEndDate", frEndDate);
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Date eDate = df.parse(frEndDate);
+        query.setParameter("frEndDate", eDate);
         return query.getResultList();
     }
     
